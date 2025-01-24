@@ -1,3 +1,5 @@
+Working on a game - where you have to know a lot about Gary Barlow songs - to practice Next JS and pulling data (in this case song data) from JSON backend.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
