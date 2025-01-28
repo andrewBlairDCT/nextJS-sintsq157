@@ -9,15 +9,13 @@ interface Song {
     year_released: number
 }
 
-interface JsonData {
-    data: {
-    songs: [
-        song: Song
-    ]
-    }
+interface JsonData{
+  items: [
+    song: Song
+  ]
 }
 
-const Container: React.FC<JsonData> = ({data}) => {
+const Container: React.FC<JsonData> = ({items}) => {
     const [currentSong, setCurrentSong] = useState({});
     const [previousSong, setPreviousSong] = useState({});
     const [userAnswer, setUserAnswer] = useState("");
@@ -26,10 +24,12 @@ const Container: React.FC<JsonData> = ({data}) => {
         setUserAnswer(e.target.value);
       }
     
+      console.log(items)
+
     const checkAnswer = (e: React.FormEvent) => {
         e.preventDefault();
-        if (data.songs.find(song => song.title === userAnswer)) {
-            const userSong = data.songs.filter(song => song.title === userAnswer)
+        if (items.find(song => song.title === userAnswer)) {
+            const userSong = items.filter(song => song.title === userAnswer)
             console.log(typeof userSong)
             setCurrentSong(userSong)
         } else {
