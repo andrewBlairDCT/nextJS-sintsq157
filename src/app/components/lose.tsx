@@ -3,9 +3,10 @@ import RestartBtn from "./restart";
 interface loseProps {
     setLost: (filterTerm: boolean) => void;
     reset: () => void;
+    isActive: boolean;
   }
   
-  const LoseModal: React.FC<loseProps> = ({setLost, reset}) => {
+  const LoseModal: React.FC<loseProps> = ({setLost, reset, isActive}) => {
 
     return (
         <div className="rounded-md bg-red-600 p-2 text-white justify-center fixed z-10 h-100 overflow-y-auto">
@@ -16,6 +17,7 @@ interface loseProps {
         Close</button>
         <RestartBtn
         reset={reset}
+        isActive={isActive}
         />
         </div>
         </div>

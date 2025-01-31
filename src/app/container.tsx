@@ -58,7 +58,7 @@ const Container: React.FC<JsonData> = ({items}) => {
   }
   
   useEffect(() => {
-    if (isActive && timeLeft > 0 && score !== 8) {
+    if (isActive && timeLeft > 0) {
       setTimeVisible(true);
       const timerId = setInterval(() => {
         setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
@@ -71,14 +71,18 @@ const Container: React.FC<JsonData> = ({items}) => {
     }
     }, [isActive, timeLeft]);
 
+    const lose = () => {
+      setLost(true)
+      setTimeLeft(0)
+      setTimeVisible(false)
+    }
+   
   useEffect(() => {
     if (livesLeft === 0){
-    setStartModal(false)
-    setModalOpen(false)  
     setLost(true)
     setTimeLeft(0)
     }
-  }, [livesLeft])
+  }, [livesLeft, timeLeft])
    
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
       setUserAnswer(e.target.value);
@@ -148,8 +152,10 @@ const Container: React.FC<JsonData> = ({items}) => {
       <div className='flex-row'>
       <button className="bg-indigo-600 text-white rounded-md border m-2 p-2"
       onClick={() => {openInstructions()}}
+      disabled={!isActive}
       >What do I do here?</button>
       <RestartBtn
+      isActive={isActive}
       reset={reset}
       />
       </div>
@@ -169,6 +175,7 @@ const Container: React.FC<JsonData> = ({items}) => {
         <LoseModal
         setLost={setLost}
         reset={reset}
+        isActive={isActive}
         />
       )}
       
