@@ -6,6 +6,7 @@ import LoseModal from './components/lose';
 import RestartBtn from './components/restart';
 import Countdown from './components/countdown';
 import StartModal from './components/startModal';
+import Score from './components/score';
 
 interface Song {
     title: string,
@@ -24,6 +25,7 @@ const Container: React.FC<JsonData> = ({items}) => {
   const [startModal, setStartModal] = useState(true);
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [userAnswer, setUserAnswer] = useState("");
+  const [previousAnswers, setPreviousAnswers] = useState<Song[]>([]);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isIncorrect, setIsIncorrect] = useState(false);
   const [livesLeft, setLivesLeft] = useState(3);
@@ -70,24 +72,27 @@ const Container: React.FC<JsonData> = ({items}) => {
     }, [isActive, timeLeft]);
 
   useEffect(() => {
-    if (livesLeft === 0)
-    {setLost(true)}
+    if (livesLeft === 0){
+    setStartModal(false)
+    setModalOpen(false)  
+    setLost(true)
+    setTimeLeft(0)
+    }
   }, [livesLeft])
    
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
       setUserAnswer(e.target.value);
     } 
-
       
   const checkAnswer = (e: React.FormEvent) => {
       e.preventDefault();
       setIsCorrect(false)
       setIsIncorrect(false)
 
-  const userSong = items.find(song => song.title === userAnswer)
+  const userSong = items.find(song => song.title.toLowerCase() === userAnswer.toLowerCase())
 
-    if (!userSong || currentSong && 
-      currentSong.chart_position < userSong.chart_position) {
+    if (!userSong || currentSong && userSong && previousAnswers.includes(userSong) === true ||
+      currentSong && currentSong.chart_position < userSong.chart_position) {
       setIsIncorrect(true);
       setLivesLeft(prev => prev - 1);
       setUserAnswer('');
@@ -97,14 +102,20 @@ const Container: React.FC<JsonData> = ({items}) => {
     setCurrentSong(userSong);
     setUserAnswer('');
 
-    if (userSong && currentSong &&
+    if (userSong && currentSong && previousAnswers.includes(userSong) === false &&
       userSong.chart_position >= currentSong.chart_position) {
       setIsCorrect(true)
+      setPreviousAnswers([...previousAnswers, userSong])
+      setScore(score + timeLeft)
+      setTimeLeft(60)
       setCurrentSong(userSong);
     }
 
     else {
       setIsCorrect(true)
+      setPreviousAnswers([...previousAnswers, userSong])
+      setScore(score + timeLeft)
+      setTimeLeft(60)
     }
   }
 
@@ -113,26 +124,30 @@ const Container: React.FC<JsonData> = ({items}) => {
     setLivesLeft(3);
     setIsCorrect(false);
     setIsIncorrect(false);
+    setPreviousAnswers([]);
     setUserAnswer("");
     setModalOpen(false);
     setLost(false);
     setScore(0);
-    setDuration(60);
+    setTimeLeft(60);
     setLost(false);
-
+    setStartModal(false);
+    setIsActive(true);
   }
-     
 
-   
-    console.log('current', currentSong)
-    
+  const openInstructions = () => {
+    setStartModal(false)
+    setLost(false)
+    setModalOpen(!modalOpen)
+  }
+        
     
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <h1>Setting the Gary Bar Low</h1>
       <div className='flex-row'>
       <button className="bg-indigo-600 text-white rounded-md border m-2 p-2"
-      onClick={() => {setModalOpen(!modalOpen)}}
+      onClick={() => {openInstructions()}}
       >What do I do here?</button>
       <RestartBtn
       reset={reset}
@@ -152,18 +167,24 @@ const Container: React.FC<JsonData> = ({items}) => {
       )}
       {lost && (
         <LoseModal
-        setModalOpen={setModalOpen}
+        setLost={setLost}
         reset={reset}
         />
       )}
       
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-
+      
       {timeVisible && (
+        <div className='flex-row'>
        <Countdown 
        timeLeft={timeLeft}
       />
+      <Score 
+      score={score}
+      />
+      </div>
       )}
+      
       <form onSubmit={checkAnswer}>
           <input
             className="rounded-md border-2 border-indigo-600 p-2"

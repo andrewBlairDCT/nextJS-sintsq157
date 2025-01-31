@@ -18,6 +18,7 @@ interface modalProps {
         <p className="py-4">First, correctly name a song written by Gary Barlow.</p>
         <p className="py-4">Then name another song written by Gary Barlow that had higher or equal position in the UK singles chart.</p>
         <p className="py-4">You are allowed three wrong answers, then it's game over.</p>
+        <p className="py-4">You can't enter the same song twice, or it will count as a wrong answer.</p>
         <button className="rounded-md bg-indigo-600 p-2"
         onClick={begin}>
         BEGIN</button>

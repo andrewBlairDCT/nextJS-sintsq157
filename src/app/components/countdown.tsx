@@ -6,8 +6,8 @@ const Countdown: React.FC<CountdownProps>= ({timeLeft}) => {
  
 
     return ( 
-        <div className="text-white">
-          {timeLeft}
+        <div className="text-black">
+          Time Left: {timeLeft}
         </div>
      );
 }
