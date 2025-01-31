@@ -81,6 +81,8 @@ const Container: React.FC<JsonData> = ({items}) => {
     if (livesLeft === 0){
     setLost(true)
     setTimeLeft(0)
+    } else if (livesLeft < 0){
+      reset()
     }
   }, [livesLeft, timeLeft])
    
@@ -147,8 +149,8 @@ const Container: React.FC<JsonData> = ({items}) => {
         
     
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <h1>Setting the Gary Bar Low</h1>
+    <div className="bg-red-400 grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Setting the Gary Bar Low</h1>
       <div className='flex-row'>
       <button className="bg-indigo-600 text-white rounded-md border m-2 p-2"
       onClick={() => {openInstructions()}}
@@ -203,6 +205,7 @@ const Container: React.FC<JsonData> = ({items}) => {
           <button
             className="rounded-md border border-indigo-600 m-2 p-2"
             type="submit"
+            disabled={userAnswer.length === 0}
           >
             Set the Gary Bar
           </button>
